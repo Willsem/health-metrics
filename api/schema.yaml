@@ -341,7 +341,11 @@ components:
     MetricType:
       type: string
       enum:
-        - 'kalories'
+        - 'calories'
+        - 'proteins'
+        - 'fats'
+        - 'carbohydrates'
+        - 'weight'
     Metric:
       type: object
       properties:
