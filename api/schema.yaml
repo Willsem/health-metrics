@@ -1,0 +1,389 @@
+openapi: '3.0.0'
+info:
+  title: Health Metrics API
+  version: 1.0.0
+tags:
+  - name: User
+    description: Пользователи
+  - name: Access
+    description: Доступ для других пользователей
+  - name: Metric
+    description: Метрики
+paths:
+  /api/v1/me:
+    get:
+      security:
+        - Bearer: []
+      operationId: getMe
+      summary: Получение информации о текущем пользователе
+      tags: [User]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Person' }
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        403: { $ref: '#/components/responses/ForbiddenError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+  /api/v1/user:
+    post:
+      operationId: postUser
+      summary: Регистрация (создание) пользователя
+      tags: [User]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PostUser' }
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Person' }
+        400: { $ref: '#/components/responses/BadRequestError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+    put:
+      security:
+        - Bearer: []
+      operationId: putUser
+      summary: Редактирование пользователя
+      tags: [User]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PutUser' }
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Person' }
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        403: { $ref: '#/components/responses/ForbiddenError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+    delete:
+      security:
+        - Bearer: []
+      operationId: deleteUser
+      summary: Soft удаление пользователя
+      tags: [User]
+      responses:
+        200:
+          description: OK
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        403: { $ref: '#/components/responses/ForbiddenError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+  /api/v1/avatar/{uuid}:
+    get:
+      security:
+        - Bearer: []
+      operationId: getAvatar
+      summary: Получение аватара пользователя
+      tags: [User]
+      parameters:
+        - name: uuid
+          description: UUID пользователя
+          in: path
+          schema: { type: string, format: uuid }
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/png:
+              schema: 
+                type: string
+                format: binary
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        403: { $ref: '#/components/responses/ForbiddenError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+  /api/v1/avatar:
+    put:
+      security:
+        - Bearer: []
+      operationId: putAvatar
+      summary: Изменение аватара текущего пользователя
+      tags: [User]
+      requestBody:
+        required: true
+        content:
+          application/png:
+            schema: 
+              type: string
+              format: binary
+      responses:
+        200:
+          description: OK
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        403: { $ref: '#/components/responses/ForbiddenError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+  /api/v1/access/users:
+    get:
+      security:
+        - Bearer: []
+      operationId: getAccessUsers
+      summary: Получение всех пользователей с доступом к своим метрикам
+      tags: [Access]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Person' }
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+  /api/v1/access/owners:
+    get:
+      security:
+        - Bearer: []
+      operationId: getAccessOwners
+      summary: Получение всех пользователей, к чьим метрикам есть доступ
+      tags: [Access]
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Person' }
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+  /api/v1/access:
+    post:
+      security:
+        - Bearer: []
+      operationId: postAccess
+      summary: Шаринг доступа к метрикам другому пользователю по логину или почте
+      tags: [Access]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PostAccess' }
+      responses:
+        200:
+          description: OK
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+  /api/v1/access/{uuid}:
+    delete:
+      security:
+        - Bearer: []
+      operationId: deleteAccess
+      summary: Удаление доступа к метрикам для другого пользователя
+      tags: [Access]
+      parameters:
+        - name: uuid
+          description: UUID доступа
+          in: path
+          schema: { type: string, format: uuid }
+          required: true
+      responses:
+        200:
+          description: OK
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+  /api/v1/metric:
+    get:
+      security:
+        - Bearer: []
+      operationId: getMetric
+      summary: Получение метрик по параметрам
+      tags: [Metric]
+      parameters:
+        - name: userUUID
+          description: UUID пользователя
+          in: query
+          schema: { type: string, format: uuid }
+          required: true
+        - name: type
+          description: Тип запрашиваемой метрики
+          in: query
+          schema: { $ref: '#/components/schemas/MetricType' }
+          required: true
+        - name: startDate
+          description: Начальная дата, с которой запрашивать метрику
+          in: query
+          schema: { type: string, format: date }
+        - name: endDate
+          description: Конечная дата, до которой запрашивать метрику
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Metric' }
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        403: { $ref: '#/components/responses/ForbiddenError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+    post:
+      security:
+        - Bearer: []
+      operationId: postMetric
+      summary: Добавление нового значение метрики
+      tags: [Metric]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PostMetric' }
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Metric' }
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        403: { $ref: '#/components/responses/ForbiddenError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+    put:
+      security:
+        - Bearer: []
+      operationId: putMetric
+      summary: Редактирование значения метрики
+      tags: [Metric]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PutMetric' }
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Metric' }
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        403: { $ref: '#/components/responses/ForbiddenError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+  /api/v1/metric/{uuid}:
+    delete:
+      security:
+        - Bearer: []
+      operationId: deleteMetric
+      summary: Удаление значения метрики
+      tags: [Metric]
+      parameters:
+        - name: uuid
+          description: UUID метрики
+          in: path
+          schema: { type: string, format: uuid }
+          required: true
+      responses:
+        200:
+          description: OK
+        400: { $ref: '#/components/responses/BadRequestError' }
+        401: { $ref: '#/components/responses/UnathorizedError' }
+        403: { $ref: '#/components/responses/ForbiddenError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
+components:
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        message: { type: string }
+      required: [message]
+    Person:
+      type: object
+      properties:
+        uuid: { type: string, format: uuid }
+        email: { type: string, format: email }
+        login: { type: string }
+      required: [uuid, email, login]
+    PostUser:
+      type: object
+      properties:
+        email: { type: string, format: email }
+        login: { type: string }
+        password: { type: string, format: passwrod }
+      required: [email, login, password]
+    PutUser:
+      type: object
+      properties:
+        uuid: { type: string, format: uuid }
+        email: { type: string, format: email }
+        login: { type: string }
+        oldPassword: { type: string, format: password }
+        newPassword: { type: string, format: password }
+      required: [uuid]
+    PostAccess:
+      type: object
+      properties:
+        email: { type: string, format: email }
+        login: { type: string }
+    MetricType:
+      type: string
+      enum:
+        - 'kalories'
+    Metric:
+      type: object
+      properties:
+        uuid: { type: string, format: uuid }
+        user: { type: string, format: uuid }
+        metricType: { $ref: '#/components/schemas/MetricType' }
+        value: { type: number, format: double }
+        date: { type: string, format: date }
+      required: [uuid, user, metricType, value, date]
+    PostMetric:
+      type: object
+      properties:
+        metricType: { $ref: '#/components/schemas/MetricType' }
+        value: { type: number, format: double }
+        date: { type: string, format: date }
+      required: [metricType, value, date]
+    PutMetric:
+      type: object
+      properties:
+        uuid: { type: string, format: uuid }
+        metricType: { $ref: '#/components/schemas/MetricType' }
+        value: { type: number, format: double }
+        date: { type: string, format: date }
+      required: [uuid]
+  responses:
+    BadRequestError:
+      description: Ошибка в запросе
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    UnathorizedError:
+      description: Неавторизованный вход
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    ForbiddenError:
+      description: Недостаточно прав
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    InternalServerError:
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
