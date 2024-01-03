@@ -31,3 +31,18 @@ erDiagram
 	users ||--o{ accesses : has
 	users ||--o{ metrics : has
 ```
+
+## Верхнеуровневая архитектура
+
+```mermaid
+flowchart LR
+	subgraph Client
+	Frontend
+	end
+
+	subgraph Server
+	Frontend --> Backend
+	Backend --> db[(PostgreSQL)]
+	Backend --> s3[(S3 Avatar storage)]
+	end
+```
