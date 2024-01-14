@@ -10,6 +10,25 @@ tags:
   - name: Metric
     description: Метрики
 paths:
+  /api/v1/login:
+    post:
+      operationId: postLogin
+      summary: Вход в систему
+      tags: [User]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PostUser' }
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TokenInfo' }
+        400: { $ref: '#/components/responses/BadRequestError' }
+        403: { $ref: '#/components/responses/ForbiddenError' }
+        500: { $ref: '#/components/responses/InternalServerError' }
   /api/v1/me:
     get:
       security:
@@ -310,6 +329,11 @@ components:
       properties:
         message: { type: string }
       required: [message]
+    TokenInfo:
+      type: object
+      properties:
+        token: { type: string, format: bearer }
+      required: [uuid, email, login]
     Person:
       type: object
       properties:
