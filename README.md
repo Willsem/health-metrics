@@ -16,9 +16,9 @@ erDiagram
 
 	metrics {
 		uuid uuid PK
-		uuid user FK
+		uuid owner FK
 		enum metric_type
-		string value
+		float value
 		datetime date
 	}
 
