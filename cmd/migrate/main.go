@@ -30,12 +30,12 @@ func main() {
 
 	config, err := config.NewMigration()
 	if err != nil {
-		logger.WithError(err).Fatal("create config")
+		logger.WithError(err).Fatal("failed to parse the config")
 	}
 
 	dir, err := atlas.NewLocalDir("./internal/generated/migrations")
 	if err != nil {
-		logger.WithError(err).Fatal("create atlas migration directory")
+		logger.WithError(err).Fatal("failed to create atlas migration directory")
 	}
 
 	opts := []schema.MigrateOption{
