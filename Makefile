@@ -35,7 +35,12 @@ build:
 test:
 	@go test -race -cover ./... -v
 
-generate:
+generate: generate-api go-generate
+
+generate-api:
+	@openapi-generator generate -i ./api/schema.yaml -g go -o ./internal/generated/api/
+
+go-generate:
 	@go generate ./...
 
 docker-build:

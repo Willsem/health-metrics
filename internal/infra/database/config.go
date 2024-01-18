@@ -3,11 +3,11 @@ package database
 import "fmt"
 
 type Config struct {
-	Host     string `envconfig:"HOST"`
-	Port     int    `envconfig:"PORT"`
-	User     string `envconfig:"USER"`
-	Password string `envconfig:"PASSWORD"`
-	DBName   string `envconfig:"DB_NAME"`
+	Host     string `envconfig:"HOST" required:"true"`
+	Port     int    `envconfig:"PORT" required:"true"`
+	User     string `envconfig:"USER" required:"true"`
+	Password string `envconfig:"PASSWORD" required:"true"`
+	DBName   string `envconfig:"DB_NAME" required:"true"`
 	SSlMode  string `envconfig:"SSL_MODE" default:"disable"`
 }
 

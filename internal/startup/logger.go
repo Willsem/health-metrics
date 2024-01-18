@@ -1,9 +1,10 @@
 package startup
 
 import (
+	"go.uber.org/zap/zapcore"
+
 	"github.com/Willsem/health-metrics/internal/infra/logger"
 	"github.com/Willsem/health-metrics/internal/infra/logger/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 type LogConfig struct {
@@ -11,7 +12,7 @@ type LogConfig struct {
 	Env   string        `envconfig:"ENV" required:"true"`
 }
 
-func NewLogger(name string, config LogConfig) logger.Logger {
+func NewLogger(name string, config *LogConfig) logger.Logger {
 	return zap.NewLogger(
 		zap.Name(name),
 		zap.LogLevel(config.Level),

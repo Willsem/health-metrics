@@ -6,14 +6,16 @@ import (
 	"github.com/kelseyhightower/envconfig"
 
 	"github.com/Willsem/health-metrics/internal/infra/database"
+	"github.com/Willsem/health-metrics/internal/startup"
 )
 
-type Migration struct {
-	Database *database.Config `envconfig:"DB" required:"true"`
+type App struct {
+	Database *database.Config   `envconfig:"DB" required:"true"`
+	Log      *startup.LogConfig `envconfig:"LOG" required:"true"`
 }
 
-func NewMigration() (*Migration, error) {
-	config := &Migration{}
+func NewApp() (*App, error) {
+	config := &App{}
 
 	err := envconfig.Process("", config)
 	if err != nil {
