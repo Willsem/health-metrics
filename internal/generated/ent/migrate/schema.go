@@ -38,7 +38,7 @@ var (
 	MetricsColumns = []*schema.Column{
 		{Name: "uuid", Type: field.TypeUUID},
 		{Name: "metric_type", Type: field.TypeEnum, Enums: []string{"calories", "fats", "carbs", "proteins", "vegetable", "steps", "weight", "neck", "breast", "left_biceps", "right_biceps", "waist", "buttocks", "left_hip", "right_hip", "left_calf", "right_calf", "fat_percentage"}},
-		{Name: "value", Type: field.TypeFloat64},
+		{Name: "value", Type: field.TypeInt},
 		{Name: "date", Type: field.TypeTime},
 		{Name: "user_metrics", Type: field.TypeUUID, Nullable: true},
 	}

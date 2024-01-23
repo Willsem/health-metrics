@@ -45,23 +45,23 @@ func (mu *MetricUpdate) SetNillableMetricType(mt *metric.MetricType) *MetricUpda
 }
 
 // SetValue sets the "value" field.
-func (mu *MetricUpdate) SetValue(f float64) *MetricUpdate {
+func (mu *MetricUpdate) SetValue(i int) *MetricUpdate {
 	mu.mutation.ResetValue()
-	mu.mutation.SetValue(f)
+	mu.mutation.SetValue(i)
 	return mu
 }
 
 // SetNillableValue sets the "value" field if the given value is not nil.
-func (mu *MetricUpdate) SetNillableValue(f *float64) *MetricUpdate {
-	if f != nil {
-		mu.SetValue(*f)
+func (mu *MetricUpdate) SetNillableValue(i *int) *MetricUpdate {
+	if i != nil {
+		mu.SetValue(*i)
 	}
 	return mu
 }
 
-// AddValue adds f to the "value" field.
-func (mu *MetricUpdate) AddValue(f float64) *MetricUpdate {
-	mu.mutation.AddValue(f)
+// AddValue adds i to the "value" field.
+func (mu *MetricUpdate) AddValue(i int) *MetricUpdate {
+	mu.mutation.AddValue(i)
 	return mu
 }
 
@@ -162,10 +162,10 @@ func (mu *MetricUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(metric.FieldMetricType, field.TypeEnum, value)
 	}
 	if value, ok := mu.mutation.Value(); ok {
-		_spec.SetField(metric.FieldValue, field.TypeFloat64, value)
+		_spec.SetField(metric.FieldValue, field.TypeInt, value)
 	}
 	if value, ok := mu.mutation.AddedValue(); ok {
-		_spec.AddField(metric.FieldValue, field.TypeFloat64, value)
+		_spec.AddField(metric.FieldValue, field.TypeInt, value)
 	}
 	if value, ok := mu.mutation.Date(); ok {
 		_spec.SetField(metric.FieldDate, field.TypeTime, value)
@@ -234,23 +234,23 @@ func (muo *MetricUpdateOne) SetNillableMetricType(mt *metric.MetricType) *Metric
 }
 
 // SetValue sets the "value" field.
-func (muo *MetricUpdateOne) SetValue(f float64) *MetricUpdateOne {
+func (muo *MetricUpdateOne) SetValue(i int) *MetricUpdateOne {
 	muo.mutation.ResetValue()
-	muo.mutation.SetValue(f)
+	muo.mutation.SetValue(i)
 	return muo
 }
 
 // SetNillableValue sets the "value" field if the given value is not nil.
-func (muo *MetricUpdateOne) SetNillableValue(f *float64) *MetricUpdateOne {
-	if f != nil {
-		muo.SetValue(*f)
+func (muo *MetricUpdateOne) SetNillableValue(i *int) *MetricUpdateOne {
+	if i != nil {
+		muo.SetValue(*i)
 	}
 	return muo
 }
 
-// AddValue adds f to the "value" field.
-func (muo *MetricUpdateOne) AddValue(f float64) *MetricUpdateOne {
-	muo.mutation.AddValue(f)
+// AddValue adds i to the "value" field.
+func (muo *MetricUpdateOne) AddValue(i int) *MetricUpdateOne {
+	muo.mutation.AddValue(i)
 	return muo
 }
 
@@ -381,10 +381,10 @@ func (muo *MetricUpdateOne) sqlSave(ctx context.Context) (_node *Metric, err err
 		_spec.SetField(metric.FieldMetricType, field.TypeEnum, value)
 	}
 	if value, ok := muo.mutation.Value(); ok {
-		_spec.SetField(metric.FieldValue, field.TypeFloat64, value)
+		_spec.SetField(metric.FieldValue, field.TypeInt, value)
 	}
 	if value, ok := muo.mutation.AddedValue(); ok {
-		_spec.AddField(metric.FieldValue, field.TypeFloat64, value)
+		_spec.AddField(metric.FieldValue, field.TypeInt, value)
 	}
 	if value, ok := muo.mutation.Date(); ok {
 		_spec.SetField(metric.FieldDate, field.TypeTime, value)

@@ -40,7 +40,7 @@ func (Metric) Fields() []ent.Field {
 				"right_calf",     // Правая икра
 				"fat_percentage", // Процент жира
 			),
-		field.Float("value"),
+		field.Int("value"),
 		field.Time("date"),
 	}
 }

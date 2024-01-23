@@ -22,7 +22,7 @@ type Metric struct {
 	// MetricType holds the value of the "metric_type" field.
 	MetricType metric.MetricType `json:"metric_type,omitempty"`
 	// Value holds the value of the "value" field.
-	Value float64 `json:"value,omitempty"`
+	Value int `json:"value,omitempty"`
 	// Date holds the value of the "date" field.
 	Date time.Time `json:"date,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -60,7 +60,7 @@ func (*Metric) scanValues(columns []string) ([]any, error) {
 	for i := range columns {
 		switch columns[i] {
 		case metric.FieldValue:
-			values[i] = new(sql.NullFloat64)
+			values[i] = new(sql.NullInt64)
 		case metric.FieldMetricType:
 			values[i] = new(sql.NullString)
 		case metric.FieldDate:
@@ -97,10 +97,10 @@ func (m *Metric) assignValues(columns []string, values []any) error {
 				m.MetricType = metric.MetricType(value.String)
 			}
 		case metric.FieldValue:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field value", values[i])
 			} else if value.Valid {
-				m.Value = value.Float64
+				m.Value = int(value.Int64)
 			}
 		case metric.FieldDate:
 			if value, ok := values[i].(*sql.NullTime); !ok {

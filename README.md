@@ -18,7 +18,7 @@ erDiagram
 		uuid uuid PK
 		uuid owner FK
 		enum metric_type
-		float value
+		int value
 		datetime date
 	}
 

@@ -29,8 +29,8 @@ func (mc *MetricCreate) SetMetricType(mt metric.MetricType) *MetricCreate {
 }
 
 // SetValue sets the "value" field.
-func (mc *MetricCreate) SetValue(f float64) *MetricCreate {
-	mc.mutation.SetValue(f)
+func (mc *MetricCreate) SetValue(i int) *MetricCreate {
+	mc.mutation.SetValue(i)
 	return mc
 }
 
@@ -170,7 +170,7 @@ func (mc *MetricCreate) createSpec() (*Metric, *sqlgraph.CreateSpec) {
 		_node.MetricType = value
 	}
 	if value, ok := mc.mutation.Value(); ok {
-		_spec.SetField(metric.FieldValue, field.TypeFloat64, value)
+		_spec.SetField(metric.FieldValue, field.TypeInt, value)
 		_node.Value = value
 	}
 	if value, ok := mc.mutation.Date(); ok {

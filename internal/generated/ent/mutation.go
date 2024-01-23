@@ -435,8 +435,8 @@ type MetricMutation struct {
 	typ           string
 	id            *uuid.UUID
 	metric_type   *metric.MetricType
-	value         *float64
-	addvalue      *float64
+	value         *int
+	addvalue      *int
 	date          *time.Time
 	clearedFields map[string]struct{}
 	owner         *uuid.UUID
@@ -587,13 +587,13 @@ func (m *MetricMutation) ResetMetricType() {
 }
 
 // SetValue sets the "value" field.
-func (m *MetricMutation) SetValue(f float64) {
-	m.value = &f
+func (m *MetricMutation) SetValue(i int) {
+	m.value = &i
 	m.addvalue = nil
 }
 
 // Value returns the value of the "value" field in the mutation.
-func (m *MetricMutation) Value() (r float64, exists bool) {
+func (m *MetricMutation) Value() (r int, exists bool) {
 	v := m.value
 	if v == nil {
 		return
@@ -604,7 +604,7 @@ func (m *MetricMutation) Value() (r float64, exists bool) {
 // OldValue returns the old "value" field's value of the Metric entity.
 // If the Metric object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MetricMutation) OldValue(ctx context.Context) (v float64, err error) {
+func (m *MetricMutation) OldValue(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldValue is only allowed on UpdateOne operations")
 	}
@@ -618,17 +618,17 @@ func (m *MetricMutation) OldValue(ctx context.Context) (v float64, err error) {
 	return oldValue.Value, nil
 }
 
-// AddValue adds f to the "value" field.
-func (m *MetricMutation) AddValue(f float64) {
+// AddValue adds i to the "value" field.
+func (m *MetricMutation) AddValue(i int) {
 	if m.addvalue != nil {
-		*m.addvalue += f
+		*m.addvalue += i
 	} else {
-		m.addvalue = &f
+		m.addvalue = &i
 	}
 }
 
 // AddedValue returns the value that was added to the "value" field in this mutation.
-func (m *MetricMutation) AddedValue() (r float64, exists bool) {
+func (m *MetricMutation) AddedValue() (r int, exists bool) {
 	v := m.addvalue
 	if v == nil {
 		return
@@ -807,7 +807,7 @@ func (m *MetricMutation) SetField(name string, value ent.Value) error {
 		m.SetMetricType(v)
 		return nil
 	case metric.FieldValue:
-		v, ok := value.(float64)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -851,7 +851,7 @@ func (m *MetricMutation) AddedField(name string) (ent.Value, bool) {
 func (m *MetricMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	case metric.FieldValue:
-		v, ok := value.(float64)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

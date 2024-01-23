@@ -57,7 +57,7 @@ func IDLTE(id uuid.UUID) predicate.Metric {
 }
 
 // Value applies equality check predicate on the "value" field. It's identical to ValueEQ.
-func Value(v float64) predicate.Metric {
+func Value(v int) predicate.Metric {
 	return predicate.Metric(sql.FieldEQ(FieldValue, v))
 }
 
@@ -87,42 +87,42 @@ func MetricTypeNotIn(vs ...MetricType) predicate.Metric {
 }
 
 // ValueEQ applies the EQ predicate on the "value" field.
-func ValueEQ(v float64) predicate.Metric {
+func ValueEQ(v int) predicate.Metric {
 	return predicate.Metric(sql.FieldEQ(FieldValue, v))
 }
 
 // ValueNEQ applies the NEQ predicate on the "value" field.
-func ValueNEQ(v float64) predicate.Metric {
+func ValueNEQ(v int) predicate.Metric {
 	return predicate.Metric(sql.FieldNEQ(FieldValue, v))
 }
 
 // ValueIn applies the In predicate on the "value" field.
-func ValueIn(vs ...float64) predicate.Metric {
+func ValueIn(vs ...int) predicate.Metric {
 	return predicate.Metric(sql.FieldIn(FieldValue, vs...))
 }
 
 // ValueNotIn applies the NotIn predicate on the "value" field.
-func ValueNotIn(vs ...float64) predicate.Metric {
+func ValueNotIn(vs ...int) predicate.Metric {
 	return predicate.Metric(sql.FieldNotIn(FieldValue, vs...))
 }
 
 // ValueGT applies the GT predicate on the "value" field.
-func ValueGT(v float64) predicate.Metric {
+func ValueGT(v int) predicate.Metric {
 	return predicate.Metric(sql.FieldGT(FieldValue, v))
 }
 
 // ValueGTE applies the GTE predicate on the "value" field.
-func ValueGTE(v float64) predicate.Metric {
+func ValueGTE(v int) predicate.Metric {
 	return predicate.Metric(sql.FieldGTE(FieldValue, v))
 }
 
 // ValueLT applies the LT predicate on the "value" field.
-func ValueLT(v float64) predicate.Metric {
+func ValueLT(v int) predicate.Metric {
 	return predicate.Metric(sql.FieldLT(FieldValue, v))
 }
 
 // ValueLTE applies the LTE predicate on the "value" field.
-func ValueLTE(v float64) predicate.Metric {
+func ValueLTE(v int) predicate.Metric {
 	return predicate.Metric(sql.FieldLTE(FieldValue, v))
 }
 
