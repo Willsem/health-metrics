@@ -5,11 +5,13 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 
+	"github.com/Willsem/health-metrics/internal/api/router"
 	"github.com/Willsem/health-metrics/internal/infra/database"
 	"github.com/Willsem/health-metrics/internal/startup"
 )
 
 type App struct {
+	Router   *router.Config     `envconfig:"ROUTER" required:"true"`
 	Database *database.Config   `envconfig:"DB" required:"true"`
 	Log      *startup.LogConfig `envconfig:"LOG" required:"true"`
 }

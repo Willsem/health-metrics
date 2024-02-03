@@ -70,6 +70,10 @@ func newEncoderConfig() zapcore.EncoderConfig {
 	}
 }
 
+func (l *LoggerImpl) GetZapLogger() *zap.SugaredLogger {
+	return l.log
+}
+
 func (l *LoggerImpl) With(key string, value interface{}) logger.Logger {
 	return &LoggerImpl{
 		log: l.log.With(key, value),
