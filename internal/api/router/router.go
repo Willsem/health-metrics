@@ -47,7 +47,7 @@ func (r *Router) Use(middlewares ...echo.MiddlewareFunc) {
 	r.echoInstance.Use(middlewares...)
 }
 
-func (r *Router) Register(handlers ...Handler) {
+func (r *Router) Register(handlers ...Handler) error {
 	for _, h := range handlers {
 		switch h.Method() {
 		case http.MethodGet:
@@ -59,7 +59,9 @@ func (r *Router) Register(handlers ...Handler) {
 		case http.MethodDelete:
 			r.echoInstance.DELETE(h.Path(), h.Handler())
 		default:
-			panic(fmt.Sprintf("unsopported method for path %s: %s", h.Path(), h.Method()))
+			return fmt.Errorf("unsopported method for path %s: %s", h.Path(), h.Method())
 		}
 	}
+
+	return nil
 }

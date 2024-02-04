@@ -6,8 +6,11 @@ import (
 	"go.uber.org/fx/fxevent"
 
 	"github.com/Willsem/health-metrics/internal/api/handlers"
+	"github.com/Willsem/health-metrics/internal/api/middleware"
 	"github.com/Willsem/health-metrics/internal/api/router"
 	"github.com/Willsem/health-metrics/internal/config"
+	"github.com/Willsem/health-metrics/internal/generated/ent"
+	"github.com/Willsem/health-metrics/internal/infra/database"
 	"github.com/Willsem/health-metrics/internal/infra/logger"
 	"github.com/Willsem/health-metrics/internal/infra/logger/zap"
 	"github.com/Willsem/health-metrics/internal/startup"
@@ -37,6 +40,17 @@ func ProvideLogger(appName string) fx.Option {
 	})
 }
 
+func ProvideDatabase() fx.Option {
+	return fx.Provide(func(log logger.Logger, lc fx.Lifecycle, cfg *config.App) *ent.Client {
+		client, err := database.NewClient(lc, cfg.Database)
+		if err != nil {
+			log.WithError(err).Fatal("failed to create database client")
+		}
+
+		return client
+	})
+}
+
 func ProvideRouter() fx.Option {
 	return fx.Provide(
 		router.NewValidator,
@@ -47,14 +61,29 @@ func ProvideRouter() fx.Option {
 	)
 }
 
+func ProvideMiddlewares() fx.Option {
+	return fx.Provide(
+		middleware.NewLogger,
+	)
+}
+
 func ProvideHandlers() fx.Option {
 	return fx.Provide(
 		handlers.NewPostLogin,
 	)
 }
 
+func RegisterMiddlewares() fx.Option {
+	return fx.Invoke(func(router *router.Router, loggerMiddleware *middleware.Logger) {
+		router.Use(loggerMiddleware.MiddlewareFunc())
+	})
+}
+
 func RegisterHandlers() fx.Option {
-	return fx.Invoke(func(router *router.Router, postLogin *handlers.PostLogin) {
-		router.Register(postLogin)
+	return fx.Invoke(func(log logger.Logger, router *router.Router, postLogin *handlers.PostLogin) {
+		err := router.Register(postLogin)
+		if err != nil {
+			log.WithError(err).Fatal("failed to register handlers")
+		}
 	})
 }
