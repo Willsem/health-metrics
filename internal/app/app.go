@@ -63,6 +63,7 @@ func ProvideRouter() fx.Option {
 
 func ProvideMiddlewares() fx.Option {
 	return fx.Provide(
+		middleware.NewContext,
 		middleware.NewLogger,
 	)
 }
@@ -74,13 +75,24 @@ func ProvideHandlers() fx.Option {
 }
 
 func RegisterMiddlewares() fx.Option {
-	return fx.Invoke(func(router *router.Router, loggerMiddleware *middleware.Logger) {
-		router.Use(loggerMiddleware.MiddlewareFunc())
+	return fx.Invoke(func(
+		router *router.Router,
+		ctxMiddleware *middleware.Context,
+		loggerMiddleware *middleware.Logger,
+	) {
+		router.Use(
+			ctxMiddleware.MiddlewareFunc(),
+			loggerMiddleware.MiddlewareFunc(),
+		)
 	})
 }
 
 func RegisterHandlers() fx.Option {
-	return fx.Invoke(func(log logger.Logger, router *router.Router, postLogin *handlers.PostLogin) {
+	return fx.Invoke(func(
+		log logger.Logger,
+		router *router.Router,
+		postLogin *handlers.PostLogin,
+	) {
 		err := router.Register(postLogin)
 		if err != nil {
 			log.WithError(err).Fatal("failed to register handlers")
