@@ -69,6 +69,10 @@ func newEncoderConfig() zapcore.EncoderConfig {
 	}
 }
 
+func (l *ZapLogger) GetSourceLogger() *zap.Logger {
+	return l.logger.Desugar()
+}
+
 func (l *ZapLogger) With(key string, value any) Logger {
 	return &ZapLogger{
 		logger: l.logger.With(key, value),

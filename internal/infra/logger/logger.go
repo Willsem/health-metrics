@@ -22,7 +22,7 @@ type Logger interface {
 	Fatal(msg string)
 }
 
-func New(config *Config) Logger {
+func GetOptions(config *Config) []Option {
 	opts := []Option{
 		WithEnv(config.Env),
 		WithName(config.Name),
@@ -35,5 +35,5 @@ func New(config *Config) Logger {
 		opts = append(opts, WithLogLevel(zapcore.InfoLevel))
 	}
 
-	return NewZap(opts...)
+	return opts
 }
