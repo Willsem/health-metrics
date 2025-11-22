@@ -3,6 +3,7 @@ module health-metrics
 go 1.25.4
 
 require (
+	github.com/go-telegram/bot v1.17.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/samber/lo v1.52.0
 	go.uber.org/fx v1.24.0

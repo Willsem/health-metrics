@@ -1,6 +1,7 @@
 package startup
 
 import (
+	"health-metrics/internal/api/telegrambot"
 	"health-metrics/internal/infra/config"
 	"health-metrics/internal/infra/logger"
 
@@ -13,6 +14,10 @@ func provideConfig() fx.Option {
 
 		fx.Provide(func(config *config.Config) *logger.Config {
 			return config.Logger
+		}),
+
+		fx.Provide(func(config *config.Config) *telegrambot.Config {
+			return config.Bot
 		}),
 	)
 }
