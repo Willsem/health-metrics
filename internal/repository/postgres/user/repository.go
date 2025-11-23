@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"health-metrics/internal/domain/errors"
-	"health-metrics/internal/domain/model"
+	domainErrors "health-metrics/internal/domain/errors"
+	domainModel "health-metrics/internal/domain/model"
 	"health-metrics/internal/generated/ent"
 	"health-metrics/internal/generated/ent/user"
 )
@@ -23,16 +23,16 @@ func New(client *ent.Client, converter UserConverter) *UserRepository {
 func (r *UserRepository) CreateFromTelegramLogin(
 	ctx context.Context,
 	telegramLogin string,
-) (model.User, error) {
+) (domainModel.User, error) {
 	user, err := r.client.User.Create().
 		SetTelegramLogin(telegramLogin).
 		Save(ctx)
 	if err != nil {
-		return model.User{}, err
+		return domainModel.User{}, err
 	}
 
 	if user == nil {
-		return model.User{}, nil
+		return domainModel.User{}, nil
 	}
 
 	return r.converter.FromEntToDomain(*user), nil
@@ -41,20 +41,20 @@ func (r *UserRepository) CreateFromTelegramLogin(
 func (r *UserRepository) GetByTelegramLogin(
 	ctx context.Context,
 	telegramLogin string,
-) (model.User, error) {
+) (domainModel.User, error) {
 	user, err := r.client.User.Query().
 		Where(user.TelegramLogin(telegramLogin)).
 		Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return model.User{}, errors.ErrNotFound
+			return domainModel.User{}, domainErrors.ErrNotFound
 		}
 
-		return model.User{}, err
+		return domainModel.User{}, err
 	}
 
 	if user == nil {
-		return model.User{}, nil
+		return domainModel.User{}, nil
 	}
 
 	return r.converter.FromEntToDomain(*user), nil

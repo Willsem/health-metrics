@@ -1,7 +1,7 @@
 package config
 
 import (
-	"health-metrics/internal/api/telegrambot"
+	apiTelegramBot "health-metrics/internal/api/telegrambot"
 	"health-metrics/internal/infra/logger"
 	"health-metrics/internal/infra/postgres"
 
@@ -9,9 +9,9 @@ import (
 )
 
 type Config struct {
-	Logger   *logger.Config      `envconfig:"LOGGER"`
-	Bot      *telegrambot.Config `envconfig:"BOT"`
-	Postgres *postgres.Config    `envconfig:"POSTGRES"`
+	Logger   *logger.Config         `envconfig:"LOGGER"`
+	Bot      *apiTelegramBot.Config `envconfig:"BOT"`
+	Postgres *postgres.Config       `envconfig:"POSTGRES"`
 }
 
 func New() (*Config, error) {
