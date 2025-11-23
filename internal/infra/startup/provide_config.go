@@ -4,6 +4,7 @@ import (
 	"health-metrics/internal/api/telegrambot"
 	"health-metrics/internal/infra/config"
 	"health-metrics/internal/infra/logger"
+	"health-metrics/internal/infra/postgres"
 
 	"go.uber.org/fx"
 )
@@ -18,6 +19,10 @@ func provideConfig() fx.Option {
 
 		fx.Provide(func(config *config.Config) *telegrambot.Config {
 			return config.Bot
+		}),
+
+		fx.Provide(func(config *config.Config) *postgres.Config {
+			return config.Postgres
 		}),
 	)
 }

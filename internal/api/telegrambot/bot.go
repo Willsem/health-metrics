@@ -3,6 +3,7 @@ package telegrambot
 import (
 	"context"
 	"health-metrics/internal/api/telegrambot/handlers/base"
+	"health-metrics/internal/api/telegrambot/middlewares/auth"
 
 	"github.com/go-telegram/bot"
 )
@@ -15,10 +16,12 @@ type Bot struct {
 
 func New(
 	config *Config,
+	authMiddleware *auth.AuthMiddleware,
 	baseHandler *base.Handler,
 ) (*Bot, error) {
 	bot, err := bot.New(
 		config.Token,
+		bot.WithMiddlewares(authMiddleware.Middleware),
 		bot.WithDefaultHandler(baseHandler.Handle),
 	)
 	if err != nil {

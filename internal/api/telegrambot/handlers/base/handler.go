@@ -2,6 +2,7 @@ package base
 
 import (
 	"context"
+	"encoding/json"
 	"health-metrics/internal/infra/logger"
 
 	"github.com/go-telegram/bot"
@@ -9,21 +10,38 @@ import (
 )
 
 type Handler struct {
-	logger logger.Logger
+	userContext UserContext
+	logger      logger.Logger
 }
 
-func New(logger logger.Logger) *Handler {
+func New(userContext UserContext, logger logger.Logger) *Handler {
 	return &Handler{
-		logger: logger,
+		userContext: userContext,
+		logger:      logger,
 	}
 }
 
 func (h *Handler) Handle(ctx context.Context, b *bot.Bot, update *models.Update) {
-	_, err := b.SendMessage(ctx, &bot.SendMessageParams{
+	user, err := h.userContext.LoadUser(ctx)
+	if err != nil {
+		h.logger.WithError(err).Error("не удалось получить авторизованного пользователя")
+
+		_, err := b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID: update.Message.Chat.ID,
+			Text:   "⚠️ Ошибка авторизации, обратитесь к владельцу бота за помощью",
+		})
+		if err != nil {
+			h.logger.WithError(err).Error("не удалось отправить сообщение")
+		}
+	}
+
+	data, _ := json.MarshalIndent(user, "  ", "")
+
+	_, err = b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID: update.Message.Chat.ID,
-		Text:   "base_handler",
+		Text:   string(data),
 	})
 	if err != nil {
-		h.logger.WithError(err).Error("failed to send the message")
+		h.logger.WithError(err).Error("не удалось отправить сообщение")
 	}
 }

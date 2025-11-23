@@ -10,9 +10,22 @@ type App struct {
 
 func NewApp() *App {
 	app := fx.New(
+		// Infrastructure
 		provideConfig(),
 		provideLogger(),
+
+		// Domain
+		provideDomain(),
+
+		// APIs
 		provideBot(),
+
+		// Usecases
+		provideApplication(),
+
+		// Repositories
+		providePostgres(),
+		provideContext(),
 	)
 
 	return &App{
